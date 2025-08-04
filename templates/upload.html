@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPLOAD FILE</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-glow: #00ffff;
+            --secondary-glow: #ff00ff;
+            --tertiary-glow: #00ff88;
+            --dark-bg: #0a0a0f;
+            --glass-bg: rgba(15, 25, 35, 0.2);
+            --text-primary: #e0e0ff;
+            --text-secondary: #a0a0c0;
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            background: radial-gradient(circle at 20% 20%, #1a0033 0%, #000011 25%, #001122 50%, #000000 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(2px 2px at 20px 30px, var(--primary-glow), transparent),
+                radial-gradient(2px 2px at 40px 70px, var(--secondary-glow), transparent),
+                radial-gradient(1px 1px at 90px 40px, var(--tertiary-glow), transparent),
+                radial-gradient(1px 1px at 130px 80px, var(--primary-glow), transparent),
+                radial-gradient(2px 2px at 160px 30px, var(--secondary-glow), transparent);
+            background-repeat: repeat;
+            background-size: 200px 100px;
+            animation: starfield 20s linear infinite;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        @keyframes starfield {
+            from { transform: translateY(0); }
+            to { transform: translateY(-100px); }
+        }
+
+        /* Holographic grid overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, transparent 98%, rgba(0, 255, 255, 0.1) 100%),
+                linear-gradient(180deg, transparent 98%, rgba(255, 0, 255, 0.1) 100%);
+            background-size: 50px 50px;
+            animation: gridPulse 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes gridPulse {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.3; }
+        }
+
+        .container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 
+                0 20px 40px rgba(0, 255, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            animation: scanline 3s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 900;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow), var(--tertiary-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            animation: titleGlow 3s ease-in-out infinite alternate;
+            letter-spacing: 0.1em;
+            position: relative;
+        }
+
+        h1::before {
+            content: '◊';
+            position: absolute;
+            left: -1.2em;
+            animation: symbolRotate 6s linear infinite;
+            color: var(--primary-glow);
+        }
+
+        h1::after {
+            content: '◊';
+            position: absolute;
+            right: -1.2em;
+            animation: symbolRotate 6s linear infinite reverse;
+            color: var(--secondary-glow);
+        }
+
+        @keyframes titleGlow {
+            from { filter: brightness(1) saturate(1); }
+            to { filter: brightness(1.2) saturate(1.5); }
+        }
+
+        @keyframes symbolRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        input[type="text"],
+        input[type="url"],
+        textarea {
+            width: 100%;
+            padding: 18px 25px;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            font-size: 1rem;
+            font-family: 'Orbitron', monospace;
+            transition: all 0.4s ease;
+            background: rgba(0, 20, 40, 0.3);
+            color: var(--text-primary);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        input[type="text"]::placeholder,
+        input[type="url"]::placeholder,
+        textarea::placeholder {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        input[type="text"]:focus,
+        input[type="url"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-glow);
+            background: rgba(0, 30, 60, 0.5);
+            box-shadow: 
+                0 0 20px rgba(0, 255, 255, 0.3),
+                inset 0 0 20px rgba(0, 255, 255, 0.1);
+            transform: scale(1.02);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 140px;
+            line-height: 1.6;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(255, 0, 255, 0.2));
+            color: var(--text-primary);
+            border: 2px solid var(--primary-glow);
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 
+                0 15px 30px rgba(0, 255, 255, 0.4),
+                0 0 40px rgba(0, 255, 255, 0.3);
+            border-color: var(--secondary-glow);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px) scale(1.01);
+            animation: glitch 0.3s;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0) scale(1.01); }
+            20% { transform: translate(-2px, 2px) scale(1.01); }
+            40% { transform: translate(-2px, -2px) scale(1.01); }
+            60% { transform: translate(2px, 2px) scale(1.01); }
+            80% { transform: translate(2px, -2px) scale(1.01); }
+            100% { transform: translate(0) scale(1.01); }
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 30px;
+            position: relative;
+        }
+
+        .back-link a {
+            color: var(--primary-glow);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            background: rgba(0, 255, 255, 0.05);
+        }
+
+        .back-link a:hover {
+            color: var(--secondary-glow);
+            border-color: var(--secondary-glow);
+            background: rgba(255, 0, 255, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 255, 255, 0.2);
+        }
+
+        /* Enhanced input focus effects */
+        .form-group::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow), var(--tertiary-glow));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .form-group:focus-within::before {
+            transform: scaleX(1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 25px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            h1::before,
+            h1::after {
+                display: none;
+            }
+
+            .submit-btn {
+                font-size: 1.1rem;
+                padding: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            input[type="text"],
+            input[type="url"],
+            textarea {
+                padding: 15px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Upload a Leak</h1>
+            <p class="subtitle">Share your leaked file with the community</p>
+        </div>
+
+        <form method="POST">
+            <div class="form-group">
+                <label for="name">File Title</label>
+                <input type="text" id="name" name="name" placeholder="Enter file name..." required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" placeholder="Briefly describe the file..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="file_link">Download Link</label>
+                <input type="url" id="file_link" name="file_link" placeholder="https://example.com/your-file" required>
+                <small style="color: gray; font-size: 0.9em;">
+                    Only links from <strong>Discord</strong>, <strong>Mediafire</strong>, <strong>Google Drive</strong>, and <strong>YouTube</strong> are allowed.
+                </small>
+            </div>
+
+            <button type="submit" class="submit-btn">Upload Leak</button>
+        </form>
+
+        <div class="back-link">
+            <a href="/">
+                <span>&larr;</span>
+                Back to Listings
+            </a>
+        </div>
+    </div>
+</body>
+</html>
