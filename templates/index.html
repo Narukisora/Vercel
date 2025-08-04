@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASSETBAY</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-glow: #00ffff;
+            --secondary-glow: #ff00ff;
+            --tertiary-glow: #00ff88;
+            --dark-bg: #0a0a0f;
+            --glass-bg: rgba(15, 25, 35, 0.2);
+            --text-primary: #e0e0ff;
+            --text-secondary: #a0a0c0;
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            background: radial-gradient(circle at 20% 20%, #1a0033 0%, #000011 25%, #001122 50%, #000000 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            color: var(--text-primary);
+        }
+
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(2px 2px at 20px 30px, var(--primary-glow), transparent),
+                radial-gradient(2px 2px at 40px 70px, var(--secondary-glow), transparent),
+                radial-gradient(1px 1px at 90px 40px, var(--tertiary-glow), transparent),
+                radial-gradient(1px 1px at 130px 80px, var(--primary-glow), transparent),
+                radial-gradient(2px 2px at 160px 30px, var(--secondary-glow), transparent);
+            background-repeat: repeat;
+            background-size: 200px 100px;
+            animation: starfield 20s linear infinite;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        @keyframes starfield {
+            from { transform: translateY(0); }
+            to { transform: translateY(-100px); }
+        }
+
+        /* Holographic grid overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, transparent 98%, rgba(0, 255, 255, 0.1) 100%),
+                linear-gradient(180deg, transparent 98%, rgba(255, 0, 255, 0.1) 100%);
+            background-size: 50px 50px;
+            animation: gridPulse 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes gridPulse {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.3; }
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 40px;
+            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow), var(--tertiary-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            animation: titleGlow 3s ease-in-out infinite alternate;
+            letter-spacing: 0.1em;
+            position: relative;
+        }
+
+        .page-title::before {
+            content: '◊';
+            position: absolute;
+            left: -1em;
+            animation: symbolRotate 6s linear infinite;
+            color: var(--primary-glow);
+        }
+
+        .page-title::after {
+            content: '◊';
+            position: absolute;
+            right: -1em;
+            animation: symbolRotate 6s linear infinite reverse;
+            color: var(--secondary-glow);
+        }
+
+        @keyframes titleGlow {
+            from { filter: brightness(1) saturate(1); }
+            to { filter: brightness(1.2) saturate(1.5); }
+        }
+
+        @keyframes symbolRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .topbar {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 25px 35px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            box-shadow: 
+                0 8px 32px rgba(0, 255, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .topbar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            animation: scanline 3s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .search-form {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .search-form input[type="text"] {
+            padding: 15px 25px;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 30px;
+            font-size: 1rem;
+            width: 300px;
+            background: rgba(0, 20, 40, 0.3);
+            color: var(--text-primary);
+            font-family: 'Orbitron', monospace;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-form input[type="text"]::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .search-form input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-glow);
+            background: rgba(0, 30, 60, 0.5);
+            box-shadow: 
+                0 0 20px rgba(0, 255, 255, 0.3),
+                inset 0 0 20px rgba(0, 255, 255, 0.1);
+            transform: scale(1.02);
+        }
+
+        .search-btn, .upload-btn {
+            padding: 15px 20px;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(255, 0, 255, 0.2));
+            color: var(--text-primary);
+            border: 2px solid var(--primary-glow);
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.4s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .search-btn::before, .upload-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .search-btn:hover::before, .upload-btn:hover::before {
+            left: 100%;
+        }
+
+        .search-btn:hover, .upload-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 
+                0 10px 25px rgba(0, 255, 255, 0.4),
+                0 0 30px rgba(0, 255, 255, 0.3);
+            border-color: var(--secondary-glow);
+        }
+
+        .upload-btn {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 255, 0.2));
+            border-color: var(--tertiary-glow);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow), var(--tertiary-glow));
+            transform: scaleX(0);
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            border-color: var(--primary-glow);
+            box-shadow: 
+                0 20px 40px rgba(0, 255, 255, 0.2),
+                0 0 30px rgba(0, 255, 255, 0.1);
+        }
+
+        .card h3 {
+            color: var(--text-primary);
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        .download-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+            color: var(--text-primary);
+            text-decoration: none;
+            border: 1px solid var(--primary-glow);
+            border-radius: 20px;
+            font-weight: 600;
+            font-family: 'Orbitron', monospace;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-link::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.3), transparent);
+            transition: all 0.4s ease;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .download-link:hover::before {
+            width: 200px;
+            height: 200px;
+        }
+
+        .download-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 255, 255, 0.3);
+            border-color: var(--secondary-glow);
+        }
+
+        .no-results {
+            text-align: center;
+            color: var(--text-primary);
+            font-size: 1.3rem;
+            margin-top: 60px;
+            padding: 50px;
+            background: var(--glass-bg);
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            border-radius: 25px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(255, 0, 255, 0.1);
+        }
+
+        .no-results h2 {
+            background: linear-gradient(45deg, var(--secondary-glow), var(--tertiary-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .topbar {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+            }
+
+            .search-form {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .search-form input[type="text"] {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .page-title::before,
+            .page-title::after {
+                display: none;
+            }
+        }
+
+        /* Glitch effect for special emphasis */
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        .search-btn:active {
+            animation: glitch 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="page-title">ASSETBAY</h1>
+
+        <div class="topbar">
+            <form method="GET" action="/" class="search-form">
+                <input type="text" name="search" placeholder="Search files..." value="{{ search }}">
+                <button type="submit" class="search-btn">Search</button>
+            </form>
+            <a class="upload-btn" href="{{ url_for('upload') }}">
+                <span>&uarr;</span>
+                Upload Leak File
+            </a>
+        </div>
+
+        <div class="cards-grid">
+            {% for listing in listings %}
+                <div class="card">
+                    <h3>{{ listing.name }}</h3>
+                    <p>{{ listing.description }}</p>
+                    <a href="{{ url_for('download', listing_id=listing.id) }}" class="download-link">
+                        <span>&darr;</span>
+                        {% set link = listing.file_link.lower() %}
+                        {% if 'discord.com' in link or 'discord.gg' in link %}
+                            Join Server!
+                        {% elif 'youtube.com' in link or 'youtu.be' in link %}
+                            Watch Video!
+                        {% elif 'mediafire.com' in link %}
+                            Download File
+                        {% elif 'drive.google.com' in link %}
+                            Download File
+                        {% else %}
+                            Invalid Link
+                        {% endif %}
+                    </a>
+                </div>
+            {% else %}
+                <div class="no-results">
+                    <h2>No Leaks Yet</h2>
+                    <p>Be the first to upload a leaked file.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
