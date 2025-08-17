@@ -70,5 +70,6 @@ def download(listing_id):
     return "<script>alert('Does not have any downloadable files!'); window.location='/'</script>"
 
 # Vercel needs this
-def handler(request, response):
-    return app(request, response)
+# For Vercel: export a WSGI handler
+from vercel_python_wsgi import make_handler
+handler = make_handler(app)
