@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASSETBAY</title>
+    <title>Upload | ASSETBAY</title>
     <style>
         * {
             margin: 0;
@@ -12,25 +12,20 @@
         }
 
         body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: #0d1117;
+            background-image: 
+                linear-gradient(135deg, rgba(88, 166, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%);
             min-height: 100vh;
-            font-family: 'Georgia', serif;
-            color: #e8e6e3;
-            position: relative;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            color: #f0f6fc;
+            line-height: 1.6;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(circle at 25% 25%, rgba(255,215,0,0.1) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(255,140,0,0.1) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: -1;
+        .emoji {
+            opacity: 0.6;
+            filter: grayscale(20%);
         }
 
         .container {
@@ -40,183 +35,196 @@
         }
 
         .header {
+            background: rgba(22, 27, 34, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(240, 246, 252, 0.1);
+            border-radius: 16px;
+            padding: 30px;
             text-align: center;
-            margin-bottom: 40px;
-            padding: 30px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
-        .treasure-icon {
-            font-size: 80px;
-            color: #d4a574;
-            margin-bottom: 20px;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
-            filter: drop-shadow(0 0 10px rgba(212, 165, 116, 0.3));
-        }
-
-        .header h1 {
-            font-size: 3em;
-            font-weight: bold;
-            color: #d4a574;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.7);
+        .logo {
+            font-size: 2.4em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #58a6ff, #f78166);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 10px;
-            letter-spacing: 2px;
+            letter-spacing: -1px;
         }
 
-        .subtitle {
-            font-size: 1.2em;
-            color: #b8b5b2;
-            font-style: italic;
+        .page-subtitle {
+            color: #8b949e;
+            font-size: 1.1em;
+            margin-bottom: 8px;
         }
 
-        form {
-            background: linear-gradient(145deg, rgba(0,0,0,0.6), rgba(0,0,0,0.4));
-            border: 2px solid #d4a574;
-            border-radius: 15px;
+        .privacy-notice {
+            background: rgba(46, 160, 67, 0.1);
+            border: 1px solid rgba(46, 160, 67, 0.3);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #7ee787;
+        }
+
+        .upload-form {
+            background: rgba(22, 27, 34, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(240, 246, 252, 0.1);
+            border-radius: 16px;
             padding: 40px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            position: relative;
-            overflow: hidden;
-        }
-
-        form::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, rgba(212, 165, 116, 0.3), rgba(255, 215, 0, 0.2), rgba(212, 165, 116, 0.3), rgba(255, 215, 0, 0.2));
-            background-size: 400% 400%;
-            border-radius: 15px;
-            z-index: -1;
-            animation: borderGlow 3s ease-in-out infinite;
-        }
-
-        @keyframes borderGlow {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
         .form-group {
             margin-bottom: 25px;
         }
 
-        .form-group label {
+        .form-label {
             display: block;
             margin-bottom: 8px;
-            color: #d4a574;
-            font-weight: bold;
-            font-size: 1.1em;
+            color: #f0f6fc;
+            font-weight: 600;
+            font-size: 14px;
         }
 
-        .form-group input,
-        .form-group textarea {
+        .form-input,
+        .form-textarea {
             width: 100%;
-            padding: 15px;
-            border: 2px solid rgba(212, 165, 116, 0.5);
-            border-radius: 10px;
-            background: rgba(0,0,0,0.7);
-            color: #e8e6e3;
+            background: rgba(13, 17, 23, 0.8);
+            border: 1px solid rgba(240, 246, 252, 0.2);
+            border-radius: 12px;
+            padding: 16px 20px;
+            color: #f0f6fc;
             font-size: 16px;
             font-family: inherit;
             transition: all 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
             outline: none;
-            border-color: #d4a574;
-            box-shadow: 0 0 20px rgba(212, 165, 116, 0.3);
-            transform: translateY(-2px);
-            background: rgba(0,0,0,0.8);
         }
 
-        .form-group input::placeholder,
-        .form-group textarea::placeholder {
-            color: #b8b5b2;
+        .form-input:focus,
+        .form-textarea:focus {
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
         }
 
-        .form-group textarea {
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: #6e7681;
+        }
+
+        .form-textarea {
             resize: vertical;
             min-height: 120px;
         }
 
-        .form-group small {
-            display: block;
+        .form-help {
             margin-top: 8px;
-            color: #b8b5b2;
-            font-size: 0.9em;
+            font-size: 13px;
+            color: #8b949e;
             line-height: 1.4;
         }
 
-        .form-group small strong {
-            color: #d4a574;
+        .form-help strong {
+            color: #58a6ff;
         }
 
         .submit-btn {
             width: 100%;
-            padding: 18px;
+            background: linear-gradient(135deg, #58a6ff, #1f6feb);
+            color: white;
             border: none;
-            border-radius: 10px;
-            background: linear-gradient(145deg, #d4a574, #b8935f);
-            color: #1a1a2e;
-            font-size: 1.2em;
-            font-weight: bold;
+            border-radius: 12px;
+            padding: 18px 24px;
+            font-weight: 600;
+            font-size: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .submit-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .submit-btn:hover::before {
-            left: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .submit-btn:hover {
-            background: linear-gradient(145deg, #ffd700, #d4a574);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(212, 165, 116, 0.4);
-        }
-
-        .submit-btn:active {
+            background: linear-gradient(135deg, #79c0ff, #58a6ff);
             transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(88, 166, 255, 0.3);
         }
 
-        .back-link {
-            margin-top: 30px;
+        .back-section {
+            background: rgba(22, 27, 34, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(240, 246, 252, 0.1);
+            border-radius: 16px;
+            padding: 25px;
             text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
-        .back-link a {
+        .back-btn {
+            background: rgba(240, 246, 252, 0.1);
+            border: 1px solid rgba(240, 246, 252, 0.2);
+            color: #f0f6fc;
+            padding: 14px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 12px 20px;
-            color: #d4a574;
-            text-decoration: none;
-            border: 2px solid #d4a574;
-            border-radius: 8px;
-            background: rgba(0,0,0,0.3);
             transition: all 0.3s ease;
-            font-weight: bold;
         }
 
-        .back-link a:hover {
-            background: rgba(212, 165, 116, 0.1);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(212, 165, 116, 0.2);
+        .back-btn:hover {
+            background: rgba(240, 246, 252, 0.15);
+            border-color: rgba(240, 246, 252, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(240, 246, 252, 0.1);
+        }
+
+        .warning-box {
+            background: rgba(248, 81, 73, 0.1);
+            border: 1px solid rgba(248, 81, 73, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .warning-box h3 {
+            color: #ff7b72;
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .warning-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .warning-list li {
+            color: #f85149;
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+            font-size: 14px;
+        }
+
+        .warning-list li::before {
+            content: '⚠';
+            position: absolute;
+            left: 0;
+            opacity: 0.6;
         }
 
         @media (max-width: 768px) {
@@ -224,91 +232,65 @@
                 padding: 15px;
             }
 
-            .header h1 {
-                font-size: 2.2em;
-            }
-
-            form {
+            .upload-form {
                 padding: 25px;
             }
 
-            .treasure-icon {
-                font-size: 60px;
+            .logo {
+                font-size: 2em;
             }
         }
-
-        .floating-particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .particle {
-            position: absolute;
-            color: #d4a574;
-            font-size: 20px;
-            opacity: 0.3;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-        }
-
-        .particle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
-        .particle:nth-child(2) { top: 60%; left: 80%; animation-delay: 2s; }
-        .particle:nth-child(3) { top: 80%; left: 20%; animation-delay: 4s; }
-        .particle:nth-child(4) { top: 30%; left: 70%; animation-delay: 1s; }
-        .particle:nth-child(5) { top: 70%; left: 50%; animation-delay: 3s; }
     </style>
 </head>
 <body>
-    <div class="floating-particles">
-        <div class="particle">⚠️</div>
-        <div class="particle">🧠</div>
-        <div class="particle">📁</div>
-        <div class="particle">🛠️</div>
-        <div class="particle">📂</div>
-    </div>
-
     <div class="container">
-        <div class="header">
-            <div class="treasure-icon">⚓</div>
-            <h1>Upload File</h1>
-            <p class="subtitle">Share Roblox assets, scripts, builds, and more with the community</p>
-        </div>
+        <header class="header">
+            <h1 class="logo">ASSETBAY</h1>
+            <p class="page-subtitle">Share Files Anonymously</p>
+            <div class="privacy-notice">
+                <span class="emoji">🔒</span> Anonymous upload • No account required • External hosting only
+            </div>
+        </header>
 
-        <form method="POST">
-            <div class="form-group">
-                <label for="name">Asset Name</label>
-                <input type="text" id="name" name="name" placeholder="Example: Pet Simulator X Script Dump" required>
+        <form method="POST" class="upload-form">
+            <div class="warning-box">
+                <h3><span class="emoji">⚠️</span> Upload Guidelines</h3>
+                <ul class="warning-list">
+                    <li>Only Roblox-related content allowed</li>
+                    <li>No malicious files or viruses</li>
+                    <li>Respect copyright and intellectual property</li>
+                    <li>Files must be hosted on approved platforms</li>
+                </ul>
             </div>
 
             <div class="form-group">
-                <label for="description">Description</label>
-                <textarea id="description" name="description" placeholder="Briefly describe what's included (e.g., UI kit, skybox, animation pack, etc.)" required></textarea>
+                <label for="name" class="form-label"><span class="emoji">📝</span> File Name</label>
+                <input type="text" id="name" name="name" class="form-input" placeholder="e.g., Grow A Garden Modded" required>
             </div>
 
             <div class="form-group">
-                <label for="file_link">Download Link</label>
-                <input type="url" id="file_link" name="file_link" placeholder="https://mediafire.com/..." required>
-                <small>
-                    ⚠️ Supported hosts: <strong>Mediafire</strong>, <strong>Discord</strong>, <strong>Google Drive</strong>, and <strong>YouTube</strong>.
-                </small>
+                <label for="description" class="form-label"><span class="emoji">📄</span> Description</label>
+                <textarea id="description" name="description" class="form-textarea" placeholder="Describe what's included in this file share..." required></textarea>
             </div>
 
-            <button type="submit" class="submit-btn">Upload Now</button>
+            <div class="form-group">
+                <label for="file_link" class="form-label"><span class="emoji">🔗</span> External Link</label>
+                <input type="url" id="file_link" name="file_link" class="form-input" placeholder="https://mediafire.com/file/..." required>
+                <div class="form-help">
+                    <span class="emoji">✅</span> <strong>Supported platforms:</strong> MediaFire, Google Drive, Discord, YouTube
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <span class="emoji">📤</span>
+                Share File
+            </button>
         </form>
 
-        <div class="back-link">
-            <a href="/">
-                <span>←</span>
-                Back to File Archive
+        <div class="back-section">
+            <a href="/" class="back-btn">
+                <span class="emoji">←</span>
+                Back to Files
             </a>
         </div>
     </div>
