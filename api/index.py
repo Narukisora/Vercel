@@ -3,13 +3,12 @@ from supabase import create_client
 from datetime import datetime, timedelta
 import uuid, os
 
-# Correct template path
-TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), "../templates")
-app = Flask(__name__, template_folder=TEMPLATE_PATH)
+# Tell Flask where to find templates
+app = Flask(__name__, template_folder="../templates")
 
-# ⚠️ Put your actual Supabase URL + Key here
+# Hardcode Supabase credentials (replace with your actual values)
 SUPABASE_URL = "https://your-project-id.supabase.co"
-SUPABASE_KEY = "your-service-role-or-anon-key"
+SUPABASE_KEY = "your-supabase-key"
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 COOLDOWN_SECONDS = 120  # 2 minutes
