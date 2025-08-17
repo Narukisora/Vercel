@@ -69,5 +69,6 @@ def download(listing_id):
         return redirect(listing["file_link"])
     return "<script>alert('Does not have any downloadable files!'); window.location='/'</script>"
 
-# Tell Vercel to use this app
-handler = app
+# Vercel needs this
+def handler(request, response):
+    return app(request, response)
