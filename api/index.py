@@ -7,8 +7,8 @@ import uuid, os
 app = Flask(__name__, template_folder="../templates")
 
 # Hardcode Supabase credentials (replace with your actual values)
-SUPABASE_URL = "https://your-project-id.supabase.co"
-SUPABASE_KEY = "your-supabase-key"
+SUPABASE_URL = "https://hzjqmssccnxddsbqliaq.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh6anFtc3NjY254ZGRzYnFsaWFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQxOTYzNjMsImV4cCI6MjA2OTc3MjM2M30.pzdW7pPHjCPqO9VJLF_kYoXcRVONO1YP2RVHkRyzOEk"
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 COOLDOWN_SECONDS = 120  # 2 minutes
