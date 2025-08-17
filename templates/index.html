@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASSETBAY</title>
+    <title>ASSETBAY | Anonymous File Sharing</title>
     <style>
         * {
             margin: 0;
@@ -12,25 +12,20 @@
         }
 
         body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: #0d1117;
+            background-image: 
+                linear-gradient(135deg, rgba(88, 166, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%);
             min-height: 100vh;
-            font-family: 'Georgia', serif;
-            color: #e8e6e3;
-            position: relative;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            color: #f0f6fc;
+            line-height: 1.6;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(circle at 25% 25%, rgba(255,215,0,0.1) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(255,140,0,0.1) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: -1;
+        .emoji {
+            opacity: 0.6;
+            filter: grayscale(20%);
         }
 
         .container {
@@ -39,413 +34,472 @@
             padding: 20px;
         }
 
-        .header-section {
+        .header {
+            background: rgba(22, 27, 34, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(240, 246, 252, 0.1);
+            border-radius: 16px;
+            padding: 30px;
             text-align: center;
-            margin-bottom: 40px;
-            padding: 30px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
-        .ship-icon {
-            font-size: 80px;
-            color: #d4a574;
-            margin-bottom: 20px;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
-            filter: drop-shadow(0 0 10px rgba(212, 165, 116, 0.3));
-        }
-
-        .page-title {
-            font-size: 3.5em;
-            font-weight: bold;
-            color: #d4a574;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.7);
+        .logo {
+            font-size: 2.8em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #58a6ff, #f78166);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 10px;
-            letter-spacing: 3px;
+            letter-spacing: -1px;
         }
 
-        .subtitle {
-            font-size: 1.2em;
-            color: #b8b5b2;
-            font-style: italic;
-            margin-bottom: 30px;
+        .tagline {
+            color: #8b949e;
+            font-size: 1.1em;
+            margin-bottom: 8px;
         }
 
-        .topbar {
-            display: flex;
-            justify-content: space-between;
+        .privacy-notice {
+            background: rgba(46, 160, 67, 0.1);
+            border: 1px solid rgba(46, 160, 67, 0.3);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 20px;
+            display: inline-flex;
             align-items: center;
-            background: rgba(0,0,0,0.3);
-            padding: 20px;
-            border-radius: 10px;
-            border: 2px solid #d4a574;
+            gap: 8px;
+            font-size: 14px;
+            color: #7ee787;
+        }
+
+        .search-section {
+            background: rgba(22, 27, 34, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(240, 246, 252, 0.1);
+            border-radius: 16px;
+            padding: 25px;
             margin-bottom: 30px;
-            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
         .search-form {
             display: flex;
-            gap: 10px;
-            flex-grow: 1;
-            max-width: 600px;
+            gap: 12px;
+            align-items: center;
         }
 
-        .search-form input {
-            flex-grow: 1;
-            padding: 12px 16px;
-            border: 2px solid #d4a574;
-            border-radius: 8px;
-            background: rgba(0,0,0,0.5);
-            color: #e8e6e3;
+        .search-input {
+            flex: 1;
+            background: rgba(13, 17, 23, 0.8);
+            border: 1px solid rgba(240, 246, 252, 0.2);
+            border-radius: 12px;
+            padding: 16px 20px;
+            color: #f0f6fc;
             font-size: 16px;
             transition: all 0.3s ease;
-        }
-
-        .search-form input:focus {
             outline: none;
-            border-color: #ffd700;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
         }
 
-        .search-form input::placeholder {
-            color: #b8b5b2;
+        .search-input:focus {
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
         }
 
-        .search-btn, .upload-btn {
-            padding: 12px 20px;
-            border: 2px solid #d4a574;
-            border-radius: 8px;
-            background: linear-gradient(145deg, #d4a574, #b8935f);
-            color: #1a1a2e;
-            font-weight: bold;
+        .search-input::placeholder {
+            color: #6e7681;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #58a6ff, #1f6feb);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 24px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
             font-size: 14px;
         }
 
-        .search-btn:hover, .upload-btn:hover {
-            background: linear-gradient(145deg, #ffd700, #d4a574);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(212, 165, 116, 0.3);
+        .btn:hover {
+            background: linear-gradient(135deg, #79c0ff, #58a6ff);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(88, 166, 255, 0.3);
         }
 
-        .upload-btn {
-            margin-left: 20px;
+        .btn-secondary {
+            background: rgba(240, 246, 252, 0.1);
+            border: 1px solid rgba(240, 246, 252, 0.2);
         }
 
-        .cards-grid {
+        .btn-secondary:hover {
+            background: rgba(240, 246, 252, 0.15);
+            border-color: rgba(240, 246, 252, 0.3);
+            box-shadow: 0 4px 15px rgba(240, 246, 252, 0.1);
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(22, 27, 34, 0.4);
+            border: 1px solid rgba(240, 246, 252, 0.1);
+            border-radius: 12px;
+            padding: 20px 30px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: 700;
+            color: #58a6ff;
+            display: block;
+        }
+
+        .stat-label {
+            color: #8b949e;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .files-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
+            gap: 20px;
+            margin-bottom: 40px;
         }
 
-        .card {
-            background: linear-gradient(145deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2));
-            border: 2px solid #d4a574;
-            border-radius: 12px;
+        .file-card {
+            background: rgba(22, 27, 34, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(240, 246, 252, 0.1);
+            border-radius: 16px;
             padding: 25px;
             transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
             position: relative;
             overflow: hidden;
         }
 
-        .card::before {
+        .file-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent 30%, rgba(212, 165, 116, 0.1) 50%, transparent 70%);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #58a6ff, #f78166, #a5a5f5);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
 
-        .card:hover::before {
-            transform: translateX(100%);
+        .file-card:hover::before {
+            transform: scaleX(1);
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: #ffd700;
-            box-shadow: 0 10px 30px rgba(212, 165, 116, 0.2);
-        }
-
-        .card h3 {
-            color: #d4a574;
-            font-size: 1.4em;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-
-        .card p {
-            color: #b8b5b2;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-
-        .download-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 18px;
-            background: linear-gradient(145deg, #d4a574, #b8935f);
-            color: #1a1a2e;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
-
-        .download-link:hover {
-            background: linear-gradient(145deg, #ffd700, #d4a574);
+        .file-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(212, 165, 116, 0.3);
+            border-color: rgba(88, 166, 255, 0.3);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
         }
 
-        .no-results {
+        .file-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .file-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #f0f6fc;
+            margin-bottom: 5px;
+        }
+
+        .file-type {
+            background: rgba(88, 166, 255, 0.2);
+            color: #79c0ff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .file-desc {
+            color: #8b949e;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .file-meta {
+            display: none;
+        }
+
+        .download-btn {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(46, 160, 67, 0.8), rgba(46, 160, 67, 1));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+        }
+
+        .download-btn:hover {
+            background: linear-gradient(135deg, rgba(46, 160, 67, 1), rgba(62, 185, 83, 1));
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(46, 160, 67, 0.3);
+        }
+
+        .no-files {
             grid-column: 1 / -1;
             text-align: center;
-            padding: 60px 20px;
-            background: rgba(0,0,0,0.3);
-            border: 2px dashed #d4a574;
-            border-radius: 12px;
+            padding: 80px 40px;
+            background: rgba(22, 27, 34, 0.4);
+            border: 2px dashed rgba(240, 246, 252, 0.2);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
         }
 
-        .no-results h2 {
-            color: #d4a574;
-            font-size: 2em;
-            margin-bottom: 15px;
+        .no-files-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            opacity: 0.5;
         }
 
-        .no-results p {
-            color: #b8b5b2;
-            font-size: 1.1em;
+        .no-files h2 {
+            color: #f0f6fc;
+            margin-bottom: 10px;
+            font-weight: 600;
         }
 
-        @media (max-width: 768px) {
-            .topbar {
-                flex-direction: column;
-                gap: 15px;
-            }
+        .no-files p {
+            color: #8b949e;
+        }
 
-            .search-form {
-                max-width: 100%;
-            }
-
-            .upload-btn {
-                margin-left: 0;
-            }
-
-            .page-title {
-                font-size: 2.5em;
-            }
-
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .discord-content {
-                flex-direction: column;
-                text-align: center;
-                gap: 15px;
-            }
-
-            .tos-content {
-                grid-template-columns: 1fr;
-            }
+        .footer {
+            margin-top: 60px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
         }
 
         .footer-section {
-            margin-top: 50px;
-            space-y: 30px;
+            background: rgba(22, 27, 34, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(240, 246, 252, 0.1);
+            border-radius: 16px;
+            padding: 30px;
         }
 
-        .discord-banner {
-            background: linear-gradient(145deg, rgba(114, 137, 218, 0.2), rgba(114, 137, 218, 0.1));
-            border: 2px solid #7289da;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            backdrop-filter: blur(10px);
+        .footer-section h3 {
+            color: #f0f6fc;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            font-weight: 600;
         }
 
-        .discord-content {
-            display: flex;
-            align-items: center;
-            gap: 20px;
+        .footer-section p {
+            color: #8b949e;
+            margin-bottom: 15px;
+            line-height: 1.6;
         }
 
-        .discord-icon {
-            font-size: 50px;
-            color: #7289da;
+        .feature-list {
+            list-style: none;
+            padding: 0;
         }
 
-        .discord-text {
-            flex-grow: 1;
+        .feature-list li {
+            color: #8b949e;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
         }
 
-        .discord-text h3 {
-            color: #7289da;
-            font-size: 1.5em;
-            margin-bottom: 8px;
+        .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #7ee787;
+            font-weight: bold;
         }
 
-        .discord-text p {
-            color: #b8b5b2;
-            margin: 0;
+        .discord-section {
+            background: rgba(88, 101, 242, 0.1);
+            border: 1px solid rgba(88, 101, 242, 0.3);
+        }
+
+        .discord-section h3 {
+            color: #5865f2;
         }
 
         .discord-btn {
-            padding: 12px 24px;
-            background: linear-gradient(145deg, #7289da, #5b6eae);
+            background: #5865f2;
             color: white;
-            text-decoration: none;
+            padding: 12px 20px;
             border-radius: 8px;
-            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
             transition: all 0.3s ease;
-            border: 2px solid #7289da;
         }
 
         .discord-btn:hover {
-            background: linear-gradient(145deg, #8ea1e1, #7289da);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(114, 137, 218, 0.3);
+            background: #4752c4;
+            transform: translateY(-1px);
         }
 
-        .tos-section {
-            background: linear-gradient(145deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2));
-            border: 2px solid #d4a574;
-            border-radius: 15px;
-            padding: 30px;
-            backdrop-filter: blur(10px);
-        }
+        @media (max-width: 768px) {
+            .search-form {
+                flex-direction: column;
+            }
 
-        .tos-section h3 {
-            color: #d4a574;
-            font-size: 1.8em;
-            margin-bottom: 25px;
-            text-align: center;
-        }
+            .files-grid {
+                grid-template-columns: 1fr;
+            }
 
-        .tos-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
+            .logo {
+                font-size: 2.2em;
+            }
 
-        .tos-item {
-            background: rgba(0,0,0,0.3);
-            padding: 20px;
-            border-radius: 10px;
-            border-left: 4px solid #d4a574;
-        }
-
-        .tos-item strong {
-            color: #d4a574;
-            font-size: 1.1em;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .tos-item p {
-            color: #b8b5b2;
-            line-height: 1.5;
-            margin: 0;
-            font-size: 0.95em;
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header-section">
-            <div class="ship-icon">⚓</div>
-            <h1 class="page-title">ASSETBAY</h1>
-            <p class="subtitle">Explore and share Roblox assets, scripts, and more</p>
-        </div>
+        <header class="header">
+            <h1 class="logo">ASSETBAY</h1>
+            <p class="tagline">Anonymous Roblox Asset Sharing Platform</p>
+            <div class="privacy-notice">
+                <span class="emoji">🛡️</span> No registration required • No tracking • Files hosted externally
+            </div>
+        </header>
 
-        <div class="topbar">
+        <div class="search-section">
             <form method="GET" action="/" class="search-form">
-                <input type="text" name="search" placeholder="Search assets, tools, or scripts..." value="{{ search }}">
-                <button type="submit" class="search-btn">🔍 Search</button>
+                <input type="text" name="search" class="search-input" placeholder="Search for scripts, models, assets..." value="{{ search }}">
+                <button type="submit" class="btn">
+                    <span class="emoji">🔍</span> Search
+                </button>
+                <a href="{{ url_for('upload') }}" class="btn btn-secondary">
+                    <span class="emoji">📤</span> Share File
+                </a>
             </form>
-            <a class="upload-btn" href="{{ url_for('upload') }}">
-                <span>⬆</span>
-                Upload Asset
-            </a>
         </div>
 
-        <div class="cards-grid">
+        <div class="stats-bar">
+            <div class="stat-card">
+                <span class="stat-number">{{ total_files }}</span>
+                <div class="stat-label">Files Shared</div>
+            </div>
+        </div>
+
+        <div class="files-grid">
             {% for listing in listings %}
-                <div class="card">
-                    <h3>{{ listing.name }}</h3>
-                    <p>{{ listing.description }}</p>
-                    <a href="{{ url_for('download', listing_id=listing.id) }}" class="download-link">
-                        <span>⬇</span>
+                <div class="file-card">
+                    <div class="file-header">
+                        <div>
+                            <h3 class="file-title">{{ listing.name }}</h3>
+                        </div>
+                        <div class="file-type">
+                            {% set link = listing.file_link.lower() %}
+                            {% if 'script' in listing.name.lower() %}
+                                Script
+                            {% elif 'model' in listing.name.lower() %}
+                                Model
+                            {% elif 'discord' in link %}
+                                Discord
+                            {% elif 'youtube' in link %}
+                                Video
+                            {% else %}
+                                Asset
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <p class="file-desc">{{ listing.description }}</p>
+                    
+                    <div class="file-meta">
+                        <span>📊 {{ range(100, 999) | random }} downloads</span>
+                        <span>💾 {{ range(1, 50) | random }}MB</span>
+                    </div>
+
+                    <a href="{{ url_for('download', listing_id=listing.id) }}" class="download-btn">
                         {% set link = listing.file_link.lower() %}
                         {% if 'discord.com' in link or 'discord.gg' in link %}
-                            Open in Discord
+                            <span class="emoji">💬</span> Open Discord Link
                         {% elif 'youtube.com' in link or 'youtu.be' in link %}
-                            Watch on YouTube
+                            <span class="emoji">🎥</span> Watch Video
                         {% elif 'mediafire.com' in link %}
-                            Download from Mediafire
+                            <span class="emoji">📥</span> Download from MediaFire
                         {% elif 'drive.google.com' in link %}
-                            Open in Google Drive
+                            <span class="emoji">📁</span> Open Google Drive
                         {% else %}
-                            Unsupported Link
+                            <span class="emoji">🔗</span> Access Link
                         {% endif %}
                     </a>
                 </div>
             {% else %}
-                <div class="no-results">
+                <div class="no-files">
+                    <div class="no-files-icon"><span class="emoji">📂</span></div>
                     <h2>No Files Found</h2>
-                    <p>Try a different keyword or upload something new to share with the community.</p>
+                    <p>Try searching with different keywords or be the first to share something!</p>
                 </div>
             {% endfor %}
         </div>
 
-        <div class="footer-section">
-            <div class="discord-banner">
-                <div class="discord-content">
-                    <div class="discord-icon">💬</div>
-                    <div class="discord-text">
-                        <h3>Join Our Community</h3>
-                        <p>Chat with others, ask questions, and stay updated on new asset uploads</p>
-                    </div>
-                    <a href="https://discord.gg/EzgbvNBehR" target="_blank" class="discord-btn">
-                        💬 Join Discord
-                    </a>
-                </div>
+        <footer class="footer">
+            <div class="footer-section">
+                <h3><span class="emoji">🔒</span> Privacy & Security</h3>
+                <ul class="feature-list">
+                    <li>No user accounts or registration</li>
+                    <li>No tracking or analytics</li>
+                    <li>Files hosted on external platforms</li>
+                    <li>Anonymous sharing and downloading</li>
+                    <li>HTTPS encrypted connections</li>
+                </ul>
             </div>
 
-            <div class="tos-section">
-                <h3>📄 Terms of Service</h3>
-                <div class="tos-content">
-                    <div class="tos-item">
-                        <strong>🔒 Copyright Notice:</strong>
-                        <p>ASSETBAY does not host files directly. All shared content is linked externally and is the responsibility of the uploader.</p>
-                    </div>
-                    <div class="tos-item">
-                        <strong>📌 User Responsibilities:</strong>
-                        <p>Users must only upload or link content they have the rights to share. Malicious or illegal content will be removed immediately.</p>
-                    </div>
-                    <div class="tos-item">
-                        <strong>🧰 File Policy:</strong>
-                        <p>We currently support links from: Discord, Mediafire, Google Drive, and YouTube. Other hosts may be restricted for safety.</p>
-                    </div>
-                    <div class="tos-item">
-                        <strong>⚠️ Disclaimer:</strong>
-                        <p>Use all shared content at your own risk. ASSETBAY is not responsible for file content or external links.</p>
-                    </div>
-                </div>
+            <div class="footer-section">
+                <h3><span class="emoji">📋</span> Usage Guidelines</h3>
+                <ul class="feature-list">
+                    <li>Share only Roblox-related content</li>
+                    <li>Respect copyright and intellectual property</li>
+                    <li>No malicious or harmful files</li>
+                    <li>Report inappropriate content</li>
+                    <li>Use external hosts: MediaFire, Google Drive, etc.</li>
+                </ul>
             </div>
-        </div>
+
+            <div class="footer-section discord-section">
+                <h3><span class="emoji">💬</span> Community</h3>
+                <p>Join our Discord community to connect with other developers, get support, and stay updated on new features.</p>
+                <a href="https://discord.gg/EzgbvNBehR" target="_blank" class="discord-btn">
+                    Join Discord Server
+                </a>
+            </div>
+        </footer>
     </div>
 </body>
 </html>
