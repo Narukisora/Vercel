@@ -25,8 +25,13 @@ def index():
         query = query.or_(f"name.ilike.%{search}%,description.ilike.%{search}%")
 
     result = query.execute()
-    return render_template("index.html", listings=result.data, search=search)
-
+    
+    # Get total count of all files in database
+    total_count = supabase.table("listings").select("id", count="exact").execute()
+    total_files = total_count.count
+    
+    return render_template("index.html", listings=result.data, search=search, total_files=total_files)
+    
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     ip = get_client_ip()
