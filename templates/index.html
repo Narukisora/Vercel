@@ -5,34 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASSETBAY</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        :root {
-            --primary-glow: #00ffff;
-            --secondary-glow: #ff00ff;
-            --tertiary-glow: #00ff88;
-            --dark-bg: #0a0a0f;
-            --glass-bg: rgba(15, 25, 35, 0.2);
-            --text-primary: #e0e0ff;
-            --text-secondary: #a0a0c0;
-        }
-
         body {
-            font-family: 'Orbitron', monospace;
-            background: radial-gradient(circle at 20% 20%, #1a0033 0%, #000011 25%, #001122 50%, #000000 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             min-height: 100vh;
-            overflow-x: hidden;
+            font-family: 'Georgia', serif;
+            color: #e8e6e3;
             position: relative;
-            color: var(--text-primary);
         }
 
-        /* Animated background particles */
         body::before {
             content: '';
             position: fixed;
@@ -40,231 +26,131 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
-                radial-gradient(2px 2px at 20px 30px, var(--primary-glow), transparent),
-                radial-gradient(2px 2px at 40px 70px, var(--secondary-glow), transparent),
-                radial-gradient(1px 1px at 90px 40px, var(--tertiary-glow), transparent),
-                radial-gradient(1px 1px at 130px 80px, var(--primary-glow), transparent),
-                radial-gradient(2px 2px at 160px 30px, var(--secondary-glow), transparent);
-            background-repeat: repeat;
-            background-size: 200px 100px;
-            animation: starfield 20s linear infinite;
-            opacity: 0.3;
-            z-index: -1;
-        }
-
-        @keyframes starfield {
-            from { transform: translateY(0); }
-            to { transform: translateY(-100px); }
-        }
-
-        /* Holographic grid overlay */
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                linear-gradient(90deg, transparent 98%, rgba(0, 255, 255, 0.1) 100%),
-                linear-gradient(180deg, transparent 98%, rgba(255, 0, 255, 0.1) 100%);
-            background-size: 50px 50px;
-            animation: gridPulse 4s ease-in-out infinite;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(255,215,0,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255,140,0,0.1) 0%, transparent 50%);
             pointer-events: none;
             z-index: -1;
         }
 
-        @keyframes gridPulse {
-            0%, 100% { opacity: 0.1; }
-            50% { opacity: 0.3; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
-        .container {
-            padding: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+        }
+
+        .ship-icon {
+            font-size: 80px;
+            color: #d4a574;
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            filter: drop-shadow(0 0 10px rgba(212, 165, 116, 0.3));
         }
 
         .page-title {
-            text-align: center;
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 900;
-            margin-bottom: 40px;
-            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow), var(--tertiary-glow));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
-            animation: titleGlow 3s ease-in-out infinite alternate;
-            letter-spacing: 0.1em;
-            position: relative;
+            font-size: 3.5em;
+            font-weight: bold;
+            color: #d4a574;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.7);
+            margin-bottom: 10px;
+            letter-spacing: 3px;
         }
 
-        .page-title::before {
-            content: '◊';
-            position: absolute;
-            left: -1em;
-            animation: symbolRotate 6s linear infinite;
-            color: var(--primary-glow);
-        }
-
-        .page-title::after {
-            content: '◊';
-            position: absolute;
-            right: -1em;
-            animation: symbolRotate 6s linear infinite reverse;
-            color: var(--secondary-glow);
-        }
-
-        @keyframes titleGlow {
-            from { filter: brightness(1) saturate(1); }
-            to { filter: brightness(1.2) saturate(1.5); }
-        }
-
-        @keyframes symbolRotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .subtitle {
+            font-size: 1.2em;
+            color: #b8b5b2;
+            font-style: italic;
+            margin-bottom: 30px;
         }
 
         .topbar {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 255, 255, 0.2);
-            border-radius: 25px;
-            padding: 25px 35px;
-            margin-bottom: 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            box-shadow: 
-                0 8px 32px rgba(0, 255, 255, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .topbar::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
-            animation: scanline 3s linear infinite;
-        }
-
-        @keyframes scanline {
-            0% { left: -100%; }
-            100% { left: 100%; }
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #d4a574;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
         }
 
         .search-form {
             display: flex;
-            align-items: center;
-            gap: 15px;
-            position: relative;
+            gap: 10px;
+            flex-grow: 1;
+            max-width: 600px;
         }
 
-        .search-form input[type="text"] {
-            padding: 15px 25px;
-            border: 2px solid rgba(0, 255, 255, 0.3);
-            border-radius: 30px;
-            font-size: 1rem;
-            width: 300px;
-            background: rgba(0, 20, 40, 0.3);
-            color: var(--text-primary);
-            font-family: 'Orbitron', monospace;
-            transition: all 0.4s ease;
-            backdrop-filter: blur(10px);
+        .search-form input {
+            flex-grow: 1;
+            padding: 12px 16px;
+            border: 2px solid #d4a574;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.5);
+            color: #e8e6e3;
+            font-size: 16px;
+            transition: all 0.3s ease;
         }
 
-        .search-form input[type="text"]::placeholder {
-            color: var(--text-secondary);
-        }
-
-        .search-form input[type="text"]:focus {
+        .search-form input:focus {
             outline: none;
-            border-color: var(--primary-glow);
-            background: rgba(0, 30, 60, 0.5);
-            box-shadow: 
-                0 0 20px rgba(0, 255, 255, 0.3),
-                inset 0 0 20px rgba(0, 255, 255, 0.1);
-            transform: scale(1.02);
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .search-form input::placeholder {
+            color: #b8b5b2;
         }
 
         .search-btn, .upload-btn {
-            padding: 15px 20px;
-            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(255, 0, 255, 0.2));
-            color: var(--text-primary);
-            border: 2px solid var(--primary-glow);
-            border-radius: 30px;
+            padding: 12px 20px;
+            border: 2px solid #d4a574;
+            border-radius: 8px;
+            background: linear-gradient(145deg, #d4a574, #b8935f);
+            color: #1a1a2e;
+            font-weight: bold;
             cursor: pointer;
-            font-family: 'Orbitron', monospace;
-            font-weight: 700;
-            font-size: 1rem;
-            transition: all 0.4s ease;
+            transition: all 0.3s ease;
             text-decoration: none;
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 10px;
-            backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .search-btn::before, .upload-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .search-btn:hover::before, .upload-btn:hover::before {
-            left: 100%;
+            gap: 8px;
+            font-size: 14px;
         }
 
         .search-btn:hover, .upload-btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 
-                0 10px 25px rgba(0, 255, 255, 0.4),
-                0 0 30px rgba(0, 255, 255, 0.3);
-            border-color: var(--secondary-glow);
+            background: linear-gradient(145deg, #ffd700, #d4a574);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 165, 116, 0.3);
         }
 
         .upload-btn {
-            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 255, 0.2));
-            border-color: var(--tertiary-glow);
+            margin-left: 20px;
         }
 
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
             margin-top: 30px;
         }
 
         .card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 30px;
-            transition: all 0.5s ease;
+            background: linear-gradient(145deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2));
+            border: 2px solid #d4a574;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
             position: relative;
             overflow: hidden;
-            box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
         .card::before {
@@ -272,175 +158,226 @@
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow), var(--tertiary-glow));
-            transform: scaleX(0);
-            transition: transform 0.5s ease;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(212, 165, 116, 0.1) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
         }
 
         .card:hover::before {
-            transform: scaleX(1);
+            transform: translateX(100%);
         }
 
         .card:hover {
-            transform: translateY(-10px) rotateX(5deg);
-            border-color: var(--primary-glow);
-            box-shadow: 
-                0 20px 40px rgba(0, 255, 255, 0.2),
-                0 0 30px rgba(0, 255, 255, 0.1);
+            transform: translateY(-5px);
+            border-color: #ffd700;
+            box-shadow: 0 10px 30px rgba(212, 165, 116, 0.2);
         }
 
         .card h3 {
-            color: var(--text-primary);
-            font-size: 1.4rem;
+            color: #d4a574;
+            font-size: 1.4em;
             margin-bottom: 15px;
-            font-weight: 700;
-            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-weight: bold;
         }
 
         .card p {
-            color: var(--text-secondary);
+            color: #b8b5b2;
             line-height: 1.6;
-            margin-bottom: 25px;
-            font-size: 0.95rem;
+            margin-bottom: 20px;
+            font-size: 14px;
         }
 
         .download-link {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            padding: 12px 25px;
-            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
-            color: var(--text-primary);
+            gap: 8px;
+            padding: 10px 18px;
+            background: linear-gradient(145deg, #d4a574, #b8935f);
+            color: #1a1a2e;
             text-decoration: none;
-            border: 1px solid var(--primary-glow);
-            border-radius: 20px;
-            font-weight: 600;
-            font-family: 'Orbitron', monospace;
-            transition: all 0.4s ease;
-            backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .download-link::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: radial-gradient(circle, rgba(0, 255, 255, 0.3), transparent);
-            transition: all 0.4s ease;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .download-link:hover::before {
-            width: 200px;
-            height: 200px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 14px;
         }
 
         .download-link:hover {
+            background: linear-gradient(145deg, #ffd700, #d4a574);
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 255, 255, 0.3);
-            border-color: var(--secondary-glow);
+            box-shadow: 0 5px 15px rgba(212, 165, 116, 0.3);
         }
 
         .no-results {
+            grid-column: 1 / -1;
             text-align: center;
-            color: var(--text-primary);
-            font-size: 1.3rem;
-            margin-top: 60px;
-            padding: 50px;
-            background: var(--glass-bg);
-            border: 1px solid rgba(255, 0, 255, 0.2);
-            border-radius: 25px;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 8px 32px rgba(255, 0, 255, 0.1);
+            padding: 60px 20px;
+            background: rgba(0,0,0,0.3);
+            border: 2px dashed #d4a574;
+            border-radius: 12px;
         }
 
         .no-results h2 {
-            background: linear-gradient(45deg, var(--secondary-glow), var(--tertiary-glow));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #d4a574;
+            font-size: 2em;
             margin-bottom: 15px;
         }
 
-        /* Responsive Design */
+        .no-results p {
+            color: #b8b5b2;
+            font-size: 1.1em;
+        }
+
         @media (max-width: 768px) {
             .topbar {
                 flex-direction: column;
-                text-align: center;
-                padding: 20px;
+                gap: 15px;
             }
 
             .search-form {
-                flex-direction: column;
-                width: 100%;
+                max-width: 100%;
             }
 
-            .search-form input[type="text"] {
-                width: 100%;
-                margin-bottom: 15px;
+            .upload-btn {
+                margin-left: 0;
+            }
+
+            .page-title {
+                font-size: 2.5em;
             }
 
             .cards-grid {
                 grid-template-columns: 1fr;
             }
 
-            .page-title {
-                font-size: 2.5rem;
+            .discord-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .tos-content {
+                grid-template-columns: 1fr;
             }
         }
 
-        @media (max-width: 480px) {
-            .container {
-                padding: 15px;
-            }
-
-            .card {
-                padding: 20px;
-            }
-
-            .page-title::before,
-            .page-title::after {
-                display: none;
-            }
+        .footer-section {
+            margin-top: 50px;
+            space-y: 30px;
         }
 
-        /* Glitch effect for special emphasis */
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
+        .discord-banner {
+            background: linear-gradient(145deg, rgba(114, 137, 218, 0.2), rgba(114, 137, 218, 0.1));
+            border: 2px solid #7289da;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
         }
 
-        .search-btn:active {
-            animation: glitch 0.3s;
+        .discord-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .discord-icon {
+            font-size: 50px;
+            color: #7289da;
+        }
+
+        .discord-text {
+            flex-grow: 1;
+        }
+
+        .discord-text h3 {
+            color: #7289da;
+            font-size: 1.5em;
+            margin-bottom: 8px;
+        }
+
+        .discord-text p {
+            color: #b8b5b2;
+            margin: 0;
+        }
+
+        .discord-btn {
+            padding: 12px 24px;
+            background: linear-gradient(145deg, #7289da, #5b6eae);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 2px solid #7289da;
+        }
+
+        .discord-btn:hover {
+            background: linear-gradient(145deg, #8ea1e1, #7289da);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(114, 137, 218, 0.3);
+        }
+
+        .tos-section {
+            background: linear-gradient(145deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2));
+            border: 2px solid #d4a574;
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .tos-section h3 {
+            color: #d4a574;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .tos-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .tos-item {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #d4a574;
+        }
+
+        .tos-item strong {
+            color: #d4a574;
+            font-size: 1.1em;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .tos-item p {
+            color: #b8b5b2;
+            line-height: 1.5;
+            margin: 0;
+            font-size: 0.95em;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="page-title">ASSETBAY</h1>
+        <div class="header-section">
+            <div class="ship-icon">⚓</div>
+            <h1 class="page-title">ASSETBAY</h1>
+            <p class="subtitle">Explore and share Roblox assets, scripts, and more</p>
+        </div>
 
         <div class="topbar">
             <form method="GET" action="/" class="search-form">
-                <input type="text" name="search" placeholder="Search files..." value="{{ search }}">
-                <button type="submit" class="search-btn">Search</button>
+                <input type="text" name="search" placeholder="Search assets, tools, or scripts..." value="{{ search }}">
+                <button type="submit" class="search-btn">🔍 Search</button>
             </form>
             <a class="upload-btn" href="{{ url_for('upload') }}">
-                <span>&uarr;</span>
-                Upload Leak File
+                <span>⬆</span>
+                Upload Asset
             </a>
         </div>
 
@@ -450,27 +387,64 @@
                     <h3>{{ listing.name }}</h3>
                     <p>{{ listing.description }}</p>
                     <a href="{{ url_for('download', listing_id=listing.id) }}" class="download-link">
-                        <span>&darr;</span>
+                        <span>⬇</span>
                         {% set link = listing.file_link.lower() %}
                         {% if 'discord.com' in link or 'discord.gg' in link %}
-                            Join Server!
+                            Open in Discord
                         {% elif 'youtube.com' in link or 'youtu.be' in link %}
-                            Watch Video!
+                            Watch on YouTube
                         {% elif 'mediafire.com' in link %}
-                            Download File
+                            Download from Mediafire
                         {% elif 'drive.google.com' in link %}
-                            Download File
+                            Open in Google Drive
                         {% else %}
-                            Invalid Link
+                            Unsupported Link
                         {% endif %}
                     </a>
                 </div>
             {% else %}
                 <div class="no-results">
-                    <h2>No Leaks Yet</h2>
-                    <p>Be the first to upload a leaked file.</p>
+                    <h2>No Files Found</h2>
+                    <p>Try a different keyword or upload something new to share with the community.</p>
                 </div>
             {% endfor %}
+        </div>
+
+        <div class="footer-section">
+            <div class="discord-banner">
+                <div class="discord-content">
+                    <div class="discord-icon">💬</div>
+                    <div class="discord-text">
+                        <h3>Join Our Community</h3>
+                        <p>Chat with others, ask questions, and stay updated on new asset uploads</p>
+                    </div>
+                    <a href="https://discord.gg/EzgbvNBehR" target="_blank" class="discord-btn">
+                        💬 Join Discord
+                    </a>
+                </div>
+            </div>
+
+            <div class="tos-section">
+                <h3>📄 Terms of Service</h3>
+                <div class="tos-content">
+                    <div class="tos-item">
+                        <strong>🔒 Copyright Notice:</strong>
+                        <p>ASSETBAY does not host files directly. All shared content is linked externally and is the responsibility of the uploader.</p>
+                    </div>
+                    <div class="tos-item">
+                        <strong>📌 User Responsibilities:</strong>
+                        <p>Users must only upload or link content they have the rights to share. Malicious or illegal content will be removed immediately.</p>
+                    </div>
+                    <div class="tos-item">
+                        <strong>🧰 File Policy:</strong>
+                        <p>We currently support links from: Discord, Mediafire, Google Drive, and YouTube. Other hosts may be restricted for safety.</p>
+                    </div>
+                    <div class="tos-item">
+                        <strong>⚠️ Disclaimer:</strong>
+                        <p>Use all shared content at your own risk. ASSETBAY is not responsible for file content or external links.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>
