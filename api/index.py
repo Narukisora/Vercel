@@ -3,10 +3,13 @@ from supabase import create_client
 from datetime import datetime, timedelta
 import uuid, os
 
-app = Flask(__name__, template_folder="../templates")
+# Correct template path
+TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), "../templates")
+app = Flask(__name__, template_folder=TEMPLATE_PATH)
 
-SUPABASE_URL = os.environ.get("SUPABASE_URL")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+# ⚠️ Put your actual Supabase URL + Key here
+SUPABASE_URL = "https://your-project-id.supabase.co"
+SUPABASE_KEY = "your-service-role-or-anon-key"
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 COOLDOWN_SECONDS = 120  # 2 minutes
@@ -68,8 +71,3 @@ def download(listing_id):
     if listing["file_link"] and listing["file_link"].startswith("http"):
         return redirect(listing["file_link"])
     return "<script>alert('Does not have any downloadable files!'); window.location='/'</script>"
-
-# Vercel needs this
-# For Vercel: export a WSGI handler
-from vercel_python_wsgi import make_handler
-handler = make_handler(app)
