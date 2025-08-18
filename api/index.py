@@ -1,142 +1,134 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for
 from supabase import create_client
 from datetime import datetime, timedelta
-import uuid, os
+import uuid
 
-app = Flask(name, template_folder="../templates")
+app = Flask(__name__, template_folder="templates")
 
+# === Supabase Setup ===
 SUPABASE_URL = "https://hzjqmssccnxddsbqliaq.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh6anFtc3NjY254ZGRzYnFsaWFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQxOTYzNjMsImV4cCI6MjA2OTc3MjM2M30.pzdW7pPHjCPqO9VJLF_kYoXcRVONO1YP2RVHkRyzOEk"
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 COOLDOWN_SECONDS = 120  # 2 minutes
 
+# === Helper Functions ===
 def get_client_ip():
-return request.headers.get('X-Forwarded-For', request.remote_addr)
+    return request.headers.get("X-Forwarded-For", request.remote_addr)
 
 def format_time_ago(upload_time):
-"""Convert timestamp to human-readable time ago format"""
-if not upload_time:
-return "Unknown"
+    """Convert timestamp to 'x ago' format"""
+    if not upload_time:
+        return "Unknown"
+    try:
+        if isinstance(upload_time, str):
+            if upload_time.endswith("Z"):
+                upload_time = upload_time[:-1] + "+00:00"
+            upload_dt = datetime.fromisoformat(upload_time.replace("Z", "+00:00"))
+        else:
+            upload_dt = upload_time
 
-try:  
-    # Parse the timestamp  
-    if isinstance(upload_time, str):  
-        if upload_time.endswith('Z'):  
-            upload_time = upload_time[:-1] + '+00:00'  
-        upload_dt = datetime.fromisoformat(upload_time.replace('Z', '+00:00'))  
-    else:  
-        upload_dt = upload_time  
-          
-    now = datetime.utcnow()  
-    diff = now - upload_dt.replace(tzinfo=None)  
-      
-    seconds = int(diff.total_seconds())  
-      
-    if seconds < 60:  
-        return "Just now"  
-    elif seconds < 3600:  
-        minutes = seconds // 60  
-        return f"{minutes}m ago"  
-    elif seconds < 86400:  
-        hours = seconds // 3600  
-        return f"{hours}h ago"  
-    elif seconds < 2592000:  # 30 days  
-        days = seconds // 86400  
-        return f"{days}d ago"  
-    else:  
-        months = seconds // 2592000  
-        return f"{months}mo ago"  
-except:  
-    return "Unknown"
+        now = datetime.utcnow()
+        diff = now - upload_dt.replace(tzinfo=None)
+        seconds = int(diff.total_seconds())
 
-@app.route('/')
+        if seconds < 60:
+            return "Just now"
+        elif seconds < 3600:
+            return f"{seconds//60}m ago"
+        elif seconds < 86400:
+            return f"{seconds//3600}h ago"
+        elif seconds < 2592000:
+            return f"{seconds//86400}d ago"
+        return f"{seconds//2592000}mo ago"
+    except:
+        return "Unknown"
+
+# === Routes ===
+@app.route("/")
 def index():
-search = request.args.get("search", "").strip()
-category = request.args.get("category", "all").strip()
+    search = request.args.get("search", "").strip()
+    category = request.args.get("category", "all").strip()
 
-# Base query with all fields including created_at/inserted_at  
-query = supabase.table("listings").select("*")  
-  
-# Apply search filter  
-if search:  
-    query = query.or_(f"name.ilike.%{search}%,description.ilike.%{search}%")  
-  
-# Apply category filter  
-if category == "verified":  
-    query = query.eq("verified", True)  
-elif category == "recent":  
-    # Get files from last 7 days  
-    seven_days_ago = (datetime.utcnow() - timedelta(days=7)).isoformat()  
-    query = query.gte("inserted_at", seven_days_ago)  
-  
-# Order by verified status first (verified files at top), then by upload time  
-query = query.order("verified", desc=True).order("inserted_at", desc=True)  
-  
-result = query.execute()  
-  
-# Add formatted time to each listing  
-for listing in result.data:  
-    listing['time_ago'] = format_time_ago(listing.get('inserted_at'))  
-  
-# Get total count of all files in database  
-total_count = supabase.table("listings").select("id", count="exact").execute()  
-total_files = total_count.count  
-  
-# Get verified count  
-verified_count = supabase.table("listings").select("id", count="exact").eq("verified", True).execute()  
-verified_files = verified_count.count  
-  
-return render_template("index.html",   
-                     listings=result.data,   
-                     search=search,   
-                     category=category,  
-                     total_files=total_files,  
-                     verified_files=verified_files)
+    query = supabase.table("listings").select("*")
 
-@app.route('/upload', methods=['GET', 'POST'])
+    # Search filter
+    if search:
+        query = query.or_(f"name.ilike.%{search}%,description.ilike.%{search}%")
+
+    # Category filter
+    if category == "verified":
+        query = query.eq("verified", True)
+    elif category == "recent":
+        seven_days_ago = (datetime.utcnow() - timedelta(days=7)).isoformat()
+        query = query.gte("inserted_at", seven_days_ago)
+
+    query = query.order("verified", desc=True).order("inserted_at", desc=True)
+    result = query.execute()
+
+    # Add formatted time
+    for listing in result.data:
+        listing["time_ago"] = format_time_ago(listing.get("inserted_at"))
+
+    # File counts
+    total_files = supabase.table("listings").select("id", count="exact").execute().count
+    verified_files = (
+        supabase.table("listings").select("id", count="exact").eq("verified", True).execute().count
+    )
+
+    return render_template(
+        "index.html",
+        listings=result.data,
+        search=search,
+        category=category,
+        total_files=total_files,
+        verified_files=verified_files,
+    )
+
+@app.route("/upload", methods=["GET", "POST"])
 def upload():
-ip = get_client_ip()
-now = datetime.utcnow()
+    ip = get_client_ip()
+    now = datetime.utcnow()
 
-result = supabase.table("upload_cooldowns").select("last_upload_at").eq("ip_address", ip).execute()  
-if result.data:  
-    last_upload_at_str = result.data[0]["last_upload_at"]  
-    last_upload_at = datetime.fromisoformat(last_upload_at_str.replace("Z", "+00:00"))  
-    if now - last_upload_at < timedelta(seconds=COOLDOWN_SECONDS):  
-        remaining = int(COOLDOWN_SECONDS - (now - last_upload_at).total_seconds())  
-        return f"<script>alert('Please wait {remaining} seconds before uploading again.'); window.location='/upload'</script>"  
+    # Cooldown check
+    cooldown = supabase.table("upload_cooldowns").select("last_upload_at").eq("ip_address", ip).execute()
+    if cooldown.data:
+        last_upload_at = datetime.fromisoformat(cooldown.data[0]["last_upload_at"].replace("Z", "+00:00"))
+        if now - last_upload_at < timedelta(seconds=COOLDOWN_SECONDS):
+            remaining = int(COOLDOWN_SECONDS - (now - last_upload_at).total_seconds())
+            return f"<script>alert('Wait {remaining}s before uploading again.'); window.location='/upload'</script>"
 
-if request.method == 'POST':  
-    file_link = request.form["file_link"]  
+    if request.method == "POST":
+        file_link = request.form["file_link"]
+        allowed_domains = ["discord.com", "discord.gg", "mediafire.com", "drive.google.com", "youtube.com", "youtu.be"]
 
-    allowed_domains = ["discord.com", "discord.gg", "mediafire.com", "drive.google.com", "youtube.com", "youtu.be"]  
-    if not any(domain in file_link for domain in allowed_domains):  
-        return "<script>alert('Only Discord, Mediafire, Google Drive, or YouTube links are allowed!'); window.location='/upload'</script>"  
+        if not any(domain in file_link for domain in allowed_domains):
+            return "<script>alert('Only MediaFire, Google Drive, Discord, YouTube links allowed!'); window.location='/upload'</script>"
 
-    # Add verified = False by default and current timestamp  
-    data = {  
-        "id": str(uuid.uuid4()),  
-        "name": request.form["name"],  
-        "description": request.form["description"],  
-        "file_link": file_link,  
-        "verified": False,   # default false  
-        "inserted_at": now.isoformat()  # Add current timestamp  
-    }  
-    supabase.table("listings").insert(data).execute()  
+        # Save to Supabase
+        data = {
+            "id": str(uuid.uuid4()),
+            "name": request.form["name"],
+            "description": request.form["description"],
+            "file_link": file_link,
+            "verified": False,
+            "inserted_at": now.isoformat(),
+        }
+        supabase.table("listings").insert(data).execute()
 
-    supabase.table("upload_cooldowns").upsert({  
-        "ip_address": ip,  
-        "last_upload_at": now.isoformat()  
-    }).execute()  
+        supabase.table("upload_cooldowns").upsert({"ip_address": ip, "last_upload_at": now.isoformat()}).execute()
 
-    return redirect(url_for("index"))  
+        return redirect(url_for("index"))
 
-return render_template("upload.html")
+    return render_template("upload.html")
 
-@app.route('/download/string:listing_id')
+@app.route("/download/<string:listing_id>")
 def download(listing_id):
-listing = supabase.table("listings").select("*").eq("id", listing_id).single().execute().data
-if listing["file_link"] and listing["file_link"].startswith("http"):
-return redirect(listing["file_link"])
-return "<script>alert('Does not have any downloadable files!'); window.location='/'</script>"
+    listing = supabase.table("listings").select("*").eq("id", listing_id).single().execute().data
+    if listing and listing["file_link"].startswith("http"):
+        return redirect(listing["file_link"])
+    return "<script>alert('No file available!'); window.location='/'</script>"
+
+if __name__ == "__main__":
+    app.run(debug=True)
+    
