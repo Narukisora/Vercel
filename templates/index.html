@@ -229,11 +229,23 @@
             margin-bottom: 15px;
         }
 
+        .file-title-section {
+            flex: 1;
+        }
+
         .file-title {
             font-size: 1.3em;
             font-weight: 600;
             color: #f0f6fc;
             margin-bottom: 5px;
+        }
+
+        .file-badges {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
         }
 
         .file-type {
@@ -244,6 +256,38 @@
             font-size: 12px;
             font-weight: 500;
             text-transform: uppercase;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(30, 144, 255, 0.1);
+            border: 1px solid rgba(30, 144, 255, 0.3);
+            color: #1e90ff;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .verified-checkmark {
+            width: 16px;
+            height: 16px;
+            background: #1e90ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .verified-checkmark::after {
+            content: '✓';
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
         }
 
         .file-desc {
@@ -428,22 +472,30 @@
             {% for listing in listings %}
                 <div class="file-card">
                     <div class="file-header">
-                        <div>
+                        <div class="file-title-section">
                             <h3 class="file-title">{{ listing.name }}</h3>
-                        </div>
-                        <div class="file-type">
-                            {% set link = listing.file_link.lower() %}
-                            {% if 'script' in listing.name.lower() %}
-                                Script
-                            {% elif 'model' in listing.name.lower() %}
-                                Model
-                            {% elif 'discord' in link %}
-                                Discord
-                            {% elif 'youtube' in link %}
-                                Video
-                            {% else %}
-                                Asset
-                            {% endif %}
+                            <div class="file-badges">
+                                <div class="file-type">
+                                    {% set link = listing.file_link.lower() %}
+                                    {% if 'script' in listing.name.lower() %}
+                                        Script
+                                    {% elif 'model' in listing.name.lower() %}
+                                        Model
+                                    {% elif 'discord' in link %}
+                                        Discord
+                                    {% elif 'youtube' in link %}
+                                        Video
+                                    {% else %}
+                                        Asset
+                                    {% endif %}
+                                </div>
+                                {% if listing.verified %}
+                                    <div class="verified-badge">
+                                        <div class="verified-checkmark"></div>
+                                        Verified
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                     
