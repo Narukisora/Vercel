@@ -637,8 +637,6 @@
                             <span class="emoji">🕒</span>
                             <span>{{ listing.time_ago }}</span>
                         </div>
-                        <span>📊 {{ range(100, 999) | random }} downloads</span>
-                        <span>💾 {{ range(1, 50) | random }}MB</span>
                     </div>
 
                     <a href="{{ url_for('download', listing_id=listing.id) }}" class="download-btn">
