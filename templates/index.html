@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ASSETBAY</title>
-<meta property="og:title" content="ASSETBAY | Roblox Leaks & File Sharing" />
-<meta property="og:description" content="A hub for leaked Roblox models, assets, and scripts. Share and discover files freely." />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://assetbay.vercel.app/" />
-<meta property="og:site_name" content="ASSETBAY" />
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content="ASSETBAH | Roblox Leaks & File Sharing" />
-<meta name="twitter:description" content="A hub for leaked Roblox models, assets, and scripts. Share and discover files freely." />
-<meta name="description" content="ASSETBAY — the underground sharing spot for Roblox leaks. Upload and grab models, assets, and scripts with no limits." />
+    <title>ASSETBAY</title>
+    <meta property="og:title" content="ASSETBAY | Roblox Leaks & File Sharing" />
+    <meta property="og:description" content="A hub for leaked Roblox models, assets, and scripts. Share and discover files freely." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://assetbay.vercel.app/" />
+    <meta property="og:site_name" content="ASSETBAY" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="ASSETBAH | Roblox Leaks & File Sharing" />
+    <meta name="twitter:description" content="A hub for leaked Roblox models, assets, and scripts. Share and discover files freely." />
+    <meta name="description" content="ASSETBAY — the underground sharing spot for Roblox leaks. Upload and grab models, assets, and scripts with no limits." />
     <style>
         * {
             margin: 0;
@@ -98,6 +98,7 @@
             display: flex;
             gap: 12px;
             align-items: center;
+            margin-bottom: 20px;
         }
 
         .search-input {
@@ -154,8 +155,89 @@
             box-shadow: 0 4px 15px rgba(240, 246, 252, 0.1);
         }
 
-        .stats-bar {
+        .filter-section {
             display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-label {
+            color: #8b949e;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .category-dropdown {
+            position: relative;
+        }
+
+        .dropdown-btn {
+            background: rgba(13, 17, 23, 0.8);
+            border: 1px solid rgba(240, 246, 252, 0.2);
+            border-radius: 8px;
+            padding: 10px 16px;
+            color: #f0f6fc;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-btn:hover {
+            border-color: #58a6ff;
+            background: rgba(13, 17, 23, 0.9);
+        }
+
+        .dropdown-btn.active {
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.1);
+        }
+
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: rgba(22, 27, 34, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(240, 246, 252, 0.2);
+            border-radius: 8px;
+            padding: 8px 0;
+            min-width: 160px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            display: none;
+        }
+
+        .dropdown-content.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 10px 16px;
+            color: #f0f6fc;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(58, 106, 200, 0.2);
+            color: #79c0ff;
+        }
+
+        .dropdown-item.active {
+            background: rgba(58, 106, 200, 0.3);
+            color: #79c0ff;
+            font-weight: 600;
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
             justify-content: center;
             margin-bottom: 30px;
         }
@@ -297,7 +379,18 @@
         }
 
         .file-meta {
-            display: none;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #6e7681;
+        }
+
+        .upload-time {
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .download-btn {
@@ -425,6 +518,10 @@
                 flex-direction: column;
             }
 
+            .filter-section {
+                justify-content: center;
+            }
+
             .files-grid {
                 grid-template-columns: 1fr;
             }
@@ -452,6 +549,7 @@
         <div class="search-section">
             <form method="GET" action="/" class="search-form">
                 <input type="text" name="search" class="search-input" placeholder="Search for scripts, models, assets..." value="{{ search }}">
+                <input type="hidden" name="category" id="categoryInput" value="{{ category }}">
                 <button type="submit" class="btn">
                     <span class="emoji">🔍</span> Search
                 </button>
@@ -459,12 +557,45 @@
                     <span class="emoji">📤</span> Share File
                 </a>
             </form>
+
+            <div class="filter-section">
+                <span class="filter-label">Category:</span>
+                <div class="category-dropdown">
+                    <div class="dropdown-btn" onclick="toggleDropdown()">
+                        <span id="selectedCategory">
+                            {% if category == 'verified' %}
+                                <span class="emoji">✅</span> Verified
+                            {% elif category == 'recent' %}
+                                <span class="emoji">🆕</span> Recently Added
+                            {% else %}
+                                <span class="emoji">📁</span> All Files
+                            {% endif %}
+                        </span>
+                        <span style="margin-left: 8px;">▼</span>
+                    </div>
+                    <div class="dropdown-content" id="categoryDropdown">
+                        <div class="dropdown-item {% if category == 'all' %}active{% endif %}" onclick="selectCategory('all')">
+                            <span class="emoji">📁</span> All Files
+                        </div>
+                        <div class="dropdown-item {% if category == 'verified' %}active{% endif %}" onclick="selectCategory('verified')">
+                            <span class="emoji">✅</span> Verified
+                        </div>
+                        <div class="dropdown-item {% if category == 'recent' %}active{% endif %}" onclick="selectCategory('recent')">
+                            <span class="emoji">🆕</span> Recently Added
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="stats-bar">
             <div class="stat-card">
                 <span class="stat-number">{{ total_files }}</span>
-                <div class="stat-label">Files Shared</div>
+                <div class="stat-label">Total Files</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">{{ verified_files }}</span>
+                <div class="stat-label">Verified Files</div>
             </div>
         </div>
 
@@ -502,6 +633,10 @@
                     <p class="file-desc">{{ listing.description }}</p>
                     
                     <div class="file-meta">
+                        <div class="upload-time">
+                            <span class="emoji">🕒</span>
+                            <span>{{ listing.time_ago }}</span>
+                        </div>
                         <span>📊 {{ range(100, 999) | random }} downloads</span>
                         <span>💾 {{ range(1, 50) | random }}MB</span>
                     </div>
@@ -562,5 +697,57 @@
             </div>
         </footer>
     </div>
+
+    <script>
+        function toggleDropdown() {
+            const dropdown = document.getElementById('categoryDropdown');
+            const btn = document.querySelector('.dropdown-btn');
+            
+            dropdown.classList.toggle('show');
+            btn.classList.toggle('active');
+        }
+
+        function selectCategory(category) {
+            const categoryInput = document.getElementById('categoryInput');
+            const selectedCategory = document.getElementById('selectedCategory');
+            const dropdown = document.getElementById('categoryDropdown');
+            const btn = document.querySelector('.dropdown-btn');
+            
+            categoryInput.value = category;
+            
+            // Update the display text
+            if (category === 'verified') {
+                selectedCategory.innerHTML = '<span class="emoji">✅</span> Verified';
+            } else if (category === 'recent') {
+                selectedCategory.innerHTML = '<span class="emoji">🆕</span> Recently Added';
+            } else {
+                selectedCategory.innerHTML = '<span class="emoji">📁</span> All Files';
+            }
+            
+            // Close dropdown
+            dropdown.classList.remove('show');
+            btn.classList.remove('active');
+            
+            // Submit the form to apply the filter
+            document.querySelector('.search-form').submit();
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.querySelector('.category-dropdown');
+            const btn = document.querySelector('.dropdown-btn');
+            const dropdownContent = document.getElementById('categoryDropdown');
+            
+            if (!dropdown.contains(event.target)) {
+                dropdownContent.classList.remove('show');
+                btn.classList.remove('active');
+            }
+        });
+
+        // Auto-refresh page every 30 seconds to show new uploads
+        setTimeout(function() {
+            location.reload();
+        }, 30000);
+    </script>
 </body>
 </html>
