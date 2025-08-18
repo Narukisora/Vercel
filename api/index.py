@@ -1,10 +1,14 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for
 from supabase import create_client
 from datetime import datetime, timedelta
 import uuid, os
 
+# Get absolute path to templates folder (one level above /api)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+TEMPLATES_DIR = os.path.join(BASE_DIR, "..", "templates")
+
 # Tell Flask where to find templates
-app = Flask(__name__, template_folder="../templates")
+app = Flask(__name__, template_folder=TEMPLATES_DIR)
 
 # Hardcode Supabase credentials
 SUPABASE_URL = "https://hzjqmssccnxddsbqliaq.supabase.co"
@@ -22,7 +26,6 @@ def format_time_ago(upload_time):
         return "Unknown"
     
     try:
-        # Parse the timestamp
         if isinstance(upload_time, str):
             if upload_time.endswith('Z'):
                 upload_time = upload_time[:-1] + '+00:00'
@@ -38,17 +41,13 @@ def format_time_ago(upload_time):
         if seconds < 60:
             return "Just now"
         elif seconds < 3600:
-            minutes = seconds // 60
-            return f"{minutes}m ago"
+            return f"{seconds // 60}m ago"
         elif seconds < 86400:
-            hours = seconds // 3600
-            return f"{hours}h ago"
-        elif seconds < 2592000:  # 30 days
-            days = seconds // 86400
-            return f"{days}d ago"
+            return f"{seconds // 3600}h ago"
+        elif seconds < 2592000:
+            return f"{seconds // 86400}d ago"
         else:
-            months = seconds // 2592000
-            return f"{months}mo ago"
+            return f"{seconds // 2592000}mo ago"
     except:
         return "Unknown"
 
@@ -57,35 +56,26 @@ def index():
     search = request.args.get("search", "").strip()
     category = request.args.get("category", "all").strip()
     
-    # Base query with all fields including created_at/inserted_at
     query = supabase.table("listings").select("*")
     
-    # Apply search filter
     if search:
         query = query.or_(f"name.ilike.%{search}%,description.ilike.%{search}%")
     
-    # Apply category filter
     if category == "verified":
         query = query.eq("verified", True)
     elif category == "recent":
-        # Get files from last 7 days
         seven_days_ago = (datetime.utcnow() - timedelta(days=7)).isoformat()
         query = query.gte("inserted_at", seven_days_ago)
     
-    # Order by verified status first (verified files at top), then by upload time
     query = query.order("verified", desc=True).order("inserted_at", desc=True)
-    
     result = query.execute()
     
-    # Add formatted time to each listing
     for listing in result.data:
         listing['time_ago'] = format_time_ago(listing.get('inserted_at'))
     
-    # Get total count of all files in database
     total_count = supabase.table("listings").select("id", count="exact").execute()
     total_files = total_count.count
     
-    # Get verified count
     verified_count = supabase.table("listings").select("id", count="exact").eq("verified", True).execute()
     verified_files = verified_count.count
     
@@ -116,14 +106,13 @@ def upload():
         if not any(domain in file_link for domain in allowed_domains):
             return "<script>alert('Only Discord, Mediafire, Google Drive, or YouTube links are allowed!'); window.location='/upload'</script>"
 
-        # Add verified = False by default and current timestamp
         data = {
             "id": str(uuid.uuid4()),
             "name": request.form["name"],
             "description": request.form["description"],
             "file_link": file_link,
-            "verified": False,   # default false
-            "inserted_at": now.isoformat()  # Add current timestamp
+            "verified": False,
+            "inserted_at": now.isoformat()
         }
         supabase.table("listings").insert(data).execute()
 
