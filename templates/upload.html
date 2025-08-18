@@ -244,55 +244,55 @@
 </head>
 <body>
     <div class="container">
-        <header class="header">
-            <h1 class="logo">ASSETBAY</h1>
-            <p class="page-subtitle">Share Files Anonymously</p>
-            <div class="privacy-notice">
-                <span class="emoji">🔒</span> Anonymous upload • No account required • External hosting only
-            </div>
-        </header>
-
-        <form method="POST" action="{{ url_for('upload') }}" class="upload-form">
-            <div class="warning-box">
-                <h3><span class="emoji">⚠️</span> Upload Guidelines</h3>
-                <ul class="warning-list">
-                    <li>Only Roblox-related content allowed</li>
-                    <li>No malicious files or viruses</li>
-                    <li>Respect copyright and intellectual property</li>
-                    <li>Files must be hosted on approved platforms</li>
-                </ul>
-            </div>
-
-            <div class="form-group">
-                <label for="name" class="form-label"><span class="emoji">📝</span> File Name</label>
-                <input type="text" id="name" name="name" class="form-input" placeholder="e.g., Grow A Garden Modded" required>
-            </div>
-
-            <div class="form-group">
-                <label for="description" class="form-label"><span class="emoji">📄</span> Description</label>
-                <textarea id="description" name="description" class="form-textarea" placeholder="Describe what's included in this file share..." required></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="file_link" class="form-label"><span class="emoji">🔗</span> External Link</label>
-                <input type="url" id="file_link" name="file_link" class="form-input" placeholder="https://mediafire.com/file/..." required>
-                <div class="form-help">
-                    <span class="emoji">✅</span> <strong>Supported platforms:</strong> MediaFire, Google Drive, Discord, YouTube
-                </div>
-            </div>
-
-            <button type="submit" class="submit-btn">
-                <span class="emoji">📤</span>
-                Share File
-            </button>
-        </form>
-
-        <div class="back-section">
-            <a href="/" class="back-btn">
-                <span class="emoji">←</span>
-                Back to Files
-            </a>
+    <header class="header">
+        <h1 class="logo">ASSETBAY</h1>
+        <p class="page-subtitle">Leak • Drop • Share</p>
+        <div class="privacy-notice">
+            <span class="emoji">🔒</span> 100% Anonymous • No login • Only external links
         </div>
+    </header>
+
+    <form method="POST" action="{{ url_for('upload') }}" class="upload-form">
+        <div class="warning-box">
+            <h3><span class="emoji">⚠️</span> Drop Rules</h3>
+            <ul class="warning-list">
+                <li>Roblox leaks / scripts / models only</li>
+                <li>No ratted files or fake tools</li>
+                <li>Keep it clean, no dead links</li>
+                <li>Upload only on trusted hosts</li>
+            </ul>
+        </div>
+
+        <div class="form-group">
+            <label for="name" class="form-label"><span class="emoji">📝</span> File Title</label>
+            <input type="text" id="name" name="name" class="form-input" placeholder="e.g., MM2 Dupe Script" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description" class="form-label"><span class="emoji">📄</span> What’s Inside?</label>
+            <textarea id="description" name="description" class="form-textarea" placeholder="Explain the leak / what it does..." required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="file_link" class="form-label"><span class="emoji">🔗</span> File Link</label>
+            <input type="url" id="file_link" name="file_link" class="form-input" placeholder="https://cdn.discordapp.com/..." required>
+            <div class="form-help">
+                <span class="emoji">✅</span> <strong>Allowed hosts:</strong> MediaFire, GDrive, Discord, YouTube
+            </div>
+        </div>
+
+        <button type="submit" class="submit-btn">
+            <span class="emoji">📤</span>
+            Drop File
+        </button>
+    </form>
+
+    <div class="back-section">
+        <a href="/" class="back-btn">
+            <span class="emoji">←</span>
+            Back to Leaks
+        </a>
     </div>
+</div>
 </body>
 </html>
