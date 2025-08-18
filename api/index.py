@@ -6,7 +6,7 @@ import uuid, os
 # Tell Flask where to find templates
 app = Flask(__name__, template_folder="../templates")
 
-# Hardcode Supabase credentials (replace with your actual values)
+# Hardcode Supabase credentials
 SUPABASE_URL = "https://hzjqmssccnxddsbqliaq.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh6anFtc3NjY254ZGRzYnFsaWFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQxOTYzNjMsImV4cCI6MjA2OTc3MjM2M30.pzdW7pPHjCPqO9VJLF_kYoXcRVONO1YP2RVHkRyzOEk"
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
@@ -31,7 +31,7 @@ def index():
     total_files = total_count.count
     
     return render_template("index.html", listings=result.data, search=search, total_files=total_files)
-    
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     ip = get_client_ip()
@@ -52,11 +52,13 @@ def upload():
         if not any(domain in file_link for domain in allowed_domains):
             return "<script>alert('Only Discord, Mediafire, Google Drive, or YouTube links are allowed!'); window.location='/upload'</script>"
 
+        # Add verified = False by default
         data = {
             "id": str(uuid.uuid4()),
             "name": request.form["name"],
             "description": request.form["description"],
-            "file_link": file_link
+            "file_link": file_link,
+            "verified": False   # default false
         }
         supabase.table("listings").insert(data).execute()
 
